@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}">
+{% endblock %}
+
+{% block title %}Importer JSON {{ block.super }}{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-custom model-customform change-form{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Accueil</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='custom' %}">Formulaires personnalisés</a>
+    &rsaquo; <a href="{% url 'admin:custom_customform_changelist' %}">Formulaires</a>
+    &rsaquo; Importer JSON
+</div>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Importer un formulaire à partir d'un fichier JSON</h1>
+    <form action="." method="POST" enctype="multipart/form-data">
+        {{ form.as_p }}
+        {% csrf_token %}
+
+        <div class="submit-row">
+            <input class="default" type="submit" value="Importer" />
+            <p class="deletelink-box">
+                <a href="../" class="deletelink">Annuler</a>
+            </p>
+        </div>
+    </form>
+</div>
+<br />
+
+{% endblock %}

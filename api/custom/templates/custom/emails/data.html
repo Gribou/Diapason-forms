@@ -1,0 +1,21 @@
+{% extends 'shared/emails/base.html' %}
+
+{% block body %}
+<p>Bonjour,</p>
+<br />
+{% for item in data.values %}
+<p><strong>{{ item.field.label }}</strong><span> : </span>
+    {% if item.is_file %}
+    Voir pièce jointe
+    {% elif item.is_bool %}
+    {{item.value|yesno:"Oui,Non"}}
+    {% elif item.is_array %}
+    {{ item.value|join:", " }}
+    {% else %}
+    {{ item.value }}
+    {% endif %}
+</p>
+{% endfor %}
+<br />
+<p>Cet e-mail a été généré automatiquement à partir du formulaire correspondant sur {{site_name}}.</p>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'shared/emails/notify_investigators.html' %} {% load tz %}
+
+{% block form_list %}
+{% for brouillage in forms %}
+<div class="form">
+    <p>
+        <strong>Evènement le
+            {{ brouillage.event_date|date:"d/m/Y" }} à {{ brouillage.event_date|date:"g:i" }} TU</strong>
+        -
+        <a href="{{ detail_url }}{{ brouillage.uuid }}">Fréquence
+            {{ brouillage.frequency|default_if_none:"?" }}</a>
+    </p>
+    <p>Position : {{ brouillage.waypoint|default_if_none:"?" }} - {{ brouillage.distance|default_if_none:"?" }} NM
+        <span> - </span>
+        {{ brouillage.bearing|default_if_none:"?" }}° - FL{{ brouillage.fl|default_if_none:"?" }}
+    </p>
+    {% if brouillage.sub_data.postits|length > 0 %}
+    <p>{{ brouillage.sub_data.postits|length }} post-its</p>
+    {% endif %}
+</div>
+<hr />
+{% endfor %}
+{% endblock %}

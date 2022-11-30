@@ -1,0 +1,122 @@
+{% extends 'shared/export/pdf.html' %}
+
+{% block form %}
+<table>
+    <tr>
+        <td class="cell-header">Date</td>
+        <td class="cell-header">Heure UTC</td>
+        <td class="cell-header">Position</td>
+        <td class="cell-header">Fréquence</td>
+    </tr>
+    <tr>
+        <td>{{ form.event_date|date }}</td>
+        <td>{{ form.event_date|time:"H:i"}}</td>
+        <td>{{ form.cwp }}</td>
+        <td>{{ form.frequency }}</td>
+    </tr>
+    {% if anonymous %}
+    <tr>
+        <td>
+            <p class="cell-header">Equipe</p>
+            {% for r in form.redactors.all %}
+            <p>{{ r.team.label }}</p>
+            {% endfor %}
+        </td>
+        <td colspan="3" style="text-align: start;">
+            <p class="cell-header">Nom du (ou des) rédacteur(s) :</p>
+            {% for r in form.redactors.all %}
+            <p><span>{{ r.fullname }}</span></p>
+            {% endfor %}
+        </td>
+    </tr>
+    {% endif %}
+</table>
+
+<h3>Aéronefs</h3>
+
+<table>
+    {% for a in form.aircrafts.all %}
+    <tr>
+        <td colspan="4" style="text-align:start">
+            <h4 class="cell-header">
+                {{ a.callsign }}
+            </h4>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:start">
+            <span class="question">Balise : </span>
+            {{ a.waypoint|default_if_none:"" }}
+        </td>
+        <td style="text-align:start">
+            <span class="question">Distance : </span>
+            {{ a.distance|default_if_none:"" }} NM
+        </td>
+        <td style="text-align:start">
+            <span class="question">Relèvement : </span>
+            {{ a.bearing|default_if_none:"" }} °
+        </td>
+        <td style="text-align:start">
+            <span class="question">Niveau : </span>FL
+            {{ a.fl|default:"0" }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Analyse du bruit</h3>
+
+<table>
+    <tr>
+        <td style="text-align:start">
+            <span class="question">Type de brouillage : </span>
+            {% for t in form.interferences.all %}
+            <span style="margin-right: 4px">{{ t.name }}</span>
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:start">
+            <div class=question>Commentaire : </div>
+            <p class="text-content">{{ form.description }}</p>
+        </td>
+    </tr>
+</table>
+
+<h3>Conséquences opérationnelles</h3>
+
+<table>
+    <tr>
+        <td style="text-align:start">
+            <span class="question">Fréquence inutilisable : </span>
+            <span style="margin-right: 4px">{{ form.freq_unusable|yesno:"Oui,Non" }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:start">
+            <span class="question">Impact sur le trafic : </span>
+            <span style="margin-right: 4px">{{ form.traffic_impact|yesno:"Oui,Non" }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:start">
+            <span class="question">Utilisation d'une fréquence supplétive : </span>
+            <span style="margin-right: 4px">{{ form.supp_freq|yesno:"Oui,Non" }}</span>
+        </td>
+    </tr>
+</table>
+
+{% if encoded_strips %}
+<div class="pagebreak"></div>
+<h3>Pièces jointes</h3>
+
+{% for img in encoded_strips %}
+<p></p>
+<h4>{{ img.title }}</h4>
+<img src="data:image/png;base64, {{ img.data }}" alt="{{ img.url }}" />
+{% empty %}
+<p></p>
+<p>Pas de pièces jointes</p>
+{% endfor %}
+{% endif %}
+{% endblock %}

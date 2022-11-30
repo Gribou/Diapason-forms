@@ -1,0 +1,12 @@
+{% extends 'shared/emails/notify_investigators.txt' %}
+{% load tz %}
+{% block form_list %}{% for brouillage in forms %}
+Evènement le {{ brouillage.event_date|date:"d/m/Y" }} à {{ brouillage.event_date|date:"g:i" }} TU
+Fréquence : {{ brouillage.frequency|default_if_none:"?" }}
+Position : {{ brouillage.waypoint|default_if_none:"?" }} - {{ brouillage.distance|default_if_none:"?" }} NM - {{ brouillage.bearing|default_if_none:"?" }}° - FL{{ brouillage.fl|default_if_none:"?" }}
+Lien : {{ detail_url }}{{ brouillage.uuid }}
+
+{% if brouillage.sub_data.postits|length > 0 %}{{ brouillage.sub_data.postits|length }} post-its
+{% endif %}
+------------------------------------------------------------
+{% endfor %}{% endblock %}

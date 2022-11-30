@@ -1,0 +1,21 @@
+{% extends 'shared/emails/notify_investigators.html' %} {% load tz %}
+
+{% block form_list %}
+{% for simi in forms %}
+<div class="form">
+  <p>
+    <strong>Evènement le
+      {{ simi.event_date|date:"d/m/Y" }} à {{ simi.event_date|date:"g:i" }} TU</strong>
+    -
+    <a href="{{ detail_url }}{{ simi.uuid }}">Fiche
+      {% if safetycube_enabled %}{{ simi.safetycube.reference|default_if_none:"" }}{% else %}{{ simi.sub_data.inca_number|default_if_none:"" }}{% endif %}</a>
+  </p>
+
+  <p class="long-text">{{ simi.description|truncatechars:150 }}</p>
+  {% if simi.sub_data.postits|length > 0 %}
+  <p>{{ simi.sub_data.postits|length }} post-its</p>
+  {% endif %}
+</div>
+<hr />
+{% endfor %}
+{% endblock %}

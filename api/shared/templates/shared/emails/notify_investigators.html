@@ -1,0 +1,20 @@
+{% extends 'shared/emails/base.html' %}{% block body %}
+
+<p>Bonjour,</p>
+
+{% if forms.count > 1 %}
+<p>{{ forms.count }} nouvelles {{form_name_plural}} ont été attribuées à votre sub.</p>
+{% else %}
+<p>1 nouvelle {{form_name}} a été attribuée à votre sub.</p>
+{% endif %}
+<br />
+
+{% block form_list %}
+{% endblock %}
+<br />
+<p>
+  Vous pouvez retrouver la liste des fiches à traiter par votre sub
+  <a href="{{list_url}}">en vous connectant à votre compte</a>.
+</p>
+
+{% endblock %}

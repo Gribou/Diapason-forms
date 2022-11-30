@@ -1,0 +1,23 @@
+{% extends 'shared/emails/base.html' %}
+{% load tz %}
+
+{% block body %}
+<p>Bonjour,</p>
+
+{% if form.analysis_is_done %}
+<p>Le traitement de votre {{form_name}} du <strong>{{ form.event_date }}</strong> est termin&eacute;. Vous
+    allez recevoir la r&eacute;ponse par e-mail sous peu.</p>
+{% else %}
+<p>Votre {{form_name}} du <strong>{{ form.event_date }}</strong> est en cours de traitement par
+    {{form.assigned_to_group.name}}.</p>
+{% endif %}
+{% if form.safetycube.reference %}
+<p>Elle porte la référence SafetyCube <a href='{{ form.safetycube.url }}'>{{ form.safetycube.reference }}</a>.</p>
+{% endif %}
+{% if form.sub_data.inca_number %}
+<p>Elle porte le num&eacute;ro INCA {{ form.sub_data.inca_number }}.</p>
+{% endif %}
+<br />
+<p>Pour rappel, voici son contenu :</p>
+<p class="form long-text"><em>{{ form.description }}</em></p>
+{% endblock %}

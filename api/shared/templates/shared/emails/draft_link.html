@@ -1,0 +1,13 @@
+{% extends 'shared/emails/base.html' %}
+
+{% block body %}
+<p>Bonjour,</p>
+
+<p>Vous pouvez retrouver votre brouillon de {{form_name}} <a href='{{link}}'>ici</a>.
+    <br />
+    Ce lien est accessible depuis le réseau interne uniquement.
+</p>
+
+<p>Tout brouillon non envoyé au CDS sera supprimé dans les 48h.</p>
+
+{% endblock %}

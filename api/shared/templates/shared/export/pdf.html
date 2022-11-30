@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="utf-8" />
+	<title>{{title}}</title>
+	{% include 'shared/export/css.html' %}
+</head>
+
+<body>
+	{% block form_header %}
+	<table>
+		<tr class="header">
+			<td rowspan="2">
+				{{ pdf_export_header|safe }}
+			</td>
+			<td>
+				<h1>{{full_form_name}}</h1>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: start;">
+				{% if safetycube_enabled %}
+				<h2 style="display:inline">Réf. :</h2>
+				{{ form.safetycube.reference|default_if_none:"?" }}
+				{% else %}
+				<h2 style="display:inline">N°INCA :</h2>
+				{{ form.sub_data.inca_number|default_if_none:"?" }}
+				{% endif %}
+			</td>
+		</tr>
+	</table>
+	{% endblock %}
+
+	{% block form %}
+	{% endblock %}
+
+</body>
+
+</html>

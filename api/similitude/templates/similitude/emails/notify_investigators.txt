@@ -1,0 +1,12 @@
+{% extends 'shared/emails/notify_investigators.txt' %}
+{% load tz %}
+{% block form_list %}{% for simi in forms %}
+Evènement le {{ simi.event_date|date:"d/m/Y" }} à {{ simi.event_date|date:"g:i" }} TU
+Fiche {% if safetycube_enabled %}{{ simi.safetycube.reference|default_if_none:"" }}{% else %}{{ simi.sub_data.inca_number|default_if_none:"" }}{% endif %}
+Lien : {{ detail_url }}{{ simi.uuid }}
+
+Description : {{ simi.description|truncatechars:150 }}
+{% if simi.sub_data.postits|length > 0 %}{{ simi.sub_data.postits|length }} post-its
+{% endif %}
+------------------------------------------------------------
+{% endfor %}{% endblock %}

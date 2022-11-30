@@ -1,0 +1,11 @@
+{% extends 'shared/emails/base.txt' %}
+{{% block body %}
+Bonjour,
+
+{% if forms.count > 1 %}{{forms.count}} nouvelles {{form_name_plural}} ont été attribuées à votre sub.{% else %}1 nouvelle {{form_name}} a été attribuée à votre sub.{% endif %}
+
+{% block form_list %}
+{% endblock %}
+
+Vous pouvez retrouver la liste des fiches à traiter par votre sub sur {{site_name}} : {{list_url}}
+{% endblock %}

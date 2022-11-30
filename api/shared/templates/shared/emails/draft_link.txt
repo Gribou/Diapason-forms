@@ -1,0 +1,7 @@
+{% extends 'shared/emails/base.txt' %}
+{% block body %}Bonjour,
+
+Vous pouvez retrouver votre brouillon de {{form_name}} ici : {{link}}
+Ce lien est accessible depuis le réseau interne uniquement.
+
+Tout brouillon non envoyé au CDS sera supprimé dans les 48h.{% endblock %}

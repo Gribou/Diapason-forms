@@ -1,0 +1,11 @@
+{% extends 'shared/emails/base.html' %}
+{% load tz %}
+
+{% block body %}
+<p>Bonjour,</p>
+
+<p>Vous trouverez ci-dessous l'analyse de votre {{ form_name|default_if_none:"fiche" }} du {{ form.event_date|date }}. La fiche elle-même est en pièce jointe.</p>
+<br/>
+<p style="white-space: pre-wrap;">{{ answer }}</p>
+
+{% endblock %}

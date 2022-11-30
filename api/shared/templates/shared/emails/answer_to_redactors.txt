@@ -1,0 +1,10 @@
+{% extends 'shared/emails/base.txt' %}
+{% load tz %}
+{% block body %}
+Bonjour,
+
+Vous trouverez ci-dessous l'analyse de votre {{ form_name|default_if_none:"fiche" }} du {{ form.event_date|date }}. La fiche elle-même est en pièce jointe.
+
+{{ answer }}
+
+{% endblock %}

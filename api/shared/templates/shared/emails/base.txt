@@ -1,0 +1,5 @@
+{% block body %}
+{% endblock %}
+{% block footer %}{% if contact_mail %}
+En cas de problème, merci d'envoyer un email à {{ contact_mail }}
+{% endif %}{% endblock %}

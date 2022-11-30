@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <style>
+        #outlook a {
+            padding: 0;
+        }
+
+        body {
+            width: 100% !important;
+            min-width: 100%;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        hr {
+            color: #d9d9d9;
+            background-color: #d9d9d9;
+            height: 1px;
+            border: none;
+        }
+
+        body,
+        p {
+            color: #222222;
+            font-family: "Helvetica", "Arial", sans-serif;
+            font-weight: normal;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 8px;
+            text-align: left;
+            line-height: 1.3;
+        }
+
+        .long-text {
+            white-space: pre-wrap;
+        }
+
+        .form {
+            margin-left: 16px;
+            margin-bottom: 8px;
+        }
+
+        .form p {
+            margin-bottom: 0;
+        }
+
+        a {
+            color: #00bcd4;
+        }
+
+        body.outlook p {
+            display: inline !important;
+        }
+
+        .logo {
+            height: 48px;
+            float: left;
+            margin-right: 8px;
+        }
+
+        .footer {
+            line-height: 48px;
+        }
+    </style>
+    {% block extra-style %}
+    {% endblock %}
+</head>
+
+<body>
+    <div class="wrapper">
+        {% block body %} {% endblock %}
+
+        <br />
+        {% block footer %} {% if contact_mail %}
+        <p class="footer">
+            En cas de problème, merci d'envoyer un email à {{ contact_mail }}
+        </p>
+        {% else %}
+        <p class="footer">Merci d'utiliser {{site_name}} !</p>
+        {% endif %} {% endblock %}
+    </div>
+</body>
+
+</html>

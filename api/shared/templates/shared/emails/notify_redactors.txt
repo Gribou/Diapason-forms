@@ -1,0 +1,13 @@
+{% extends 'shared/emails/base.txt' %}
+{% block body %}
+Bonjour,
+{% if form.analysis_is_done %}
+Le traitement de votre {{form_name}} du {{ form.event_date }} est terminé. Vous allez recevoir la réponse par e-mail sous peu.
+{% else %}
+Votre {{form_name}} du {{ form.event_date }} est en cours de traitement par {{ form.assigned_to_group.name }}.
+{% endif %}{% if form.safetycube.reference %}Elle porte la référence SafetyCube {{ form.safetycube.reference }}.{% endif %}{% if form.sub_data.inca_number %}
+Elle porte le numéro INCA {{ form.sub_data.inca_number }}.
+{% endif %}
+Pour rappel, voici le contenu de votre fiche :
+"{{ form.description }}"
+{% endblock %}

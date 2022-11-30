@@ -2,7 +2,7 @@ ARG GITLAB_DEPENDENCY_PROXY=""
 # improve build time by pulling images from gitlab and not dockerhub
 
 # React production files builder
-FROM node:17-alpine AS front-builder
+FROM node:14 AS front-builder
 # reduce image size by not having react dependencies in final image
 
 ARG PROJECT_DIR=/app/

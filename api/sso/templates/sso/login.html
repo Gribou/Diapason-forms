@@ -1,0 +1,43 @@
+{% extends "admin/login.html" %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    #content-main {
+        float: none !important;
+    }
+
+    .keycloak_login_container {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .keycloak_login_container a {
+        padding: 2px 3px;
+        vertical-align: middle;
+        font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+        font-weight: normal;
+        font-size: 13px;
+        background: #417690;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        color: #eee;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .keycloak_login_container a:hover {
+        background: #609ab6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+
+<div class="keycloak_login_container">
+    <a href="{% url 'sso:login' %}{% if request.GET.next %}?next={{request.GET.next}}{% endif %}">Connexion SSO</a>
+</div>
+{% endblock %}

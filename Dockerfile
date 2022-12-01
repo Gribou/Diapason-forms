@@ -37,8 +37,8 @@ COPY ./api/Pipfile ./api/Pipfile.lock ./
 RUN pipenv install
 
 #------------------------------------------------------------------
-FROM python:3.9-slim as final
-
+#FROM python:3.9-slim as final
+FROM  registry.fedoraproject.org/f33/python3 as back-builder
 ARG HTTPS_PROXY=
 ARG HTTP_PROXY=
 ARG FTP_PROXY=

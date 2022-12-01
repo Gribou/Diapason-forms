@@ -23,7 +23,8 @@ COPY ./scripts ../scripts
 RUN rm -f .env*.local && npm run build
 
 #------------------------------------------------------------------
-FROM python:3.9-slim as back-builder
+#FROM python:3.9-slim as back-builder
+FROM ubi8/python-39 as back-builder
 # reduce image size by having only the required python dependencies in final image
 
 ENV PIPENV_VENV_IN_PROJECT=1

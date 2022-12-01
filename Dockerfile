@@ -28,8 +28,8 @@ FROM python:3.9-slim as back-builder
 
 # reduce image size by having only the required python dependencies in final image
 
-#ENV PIPENV_VENV_IN_PROJECT=1
-#ENV PATH="/app/api/.venv/bin:$PATH"
+ENV PIPENV_VENV_IN_PROJECT=1
+ENV PATH="/app/api/.venv/bin:$PATH"
 
 WORKDIR /app/api
 

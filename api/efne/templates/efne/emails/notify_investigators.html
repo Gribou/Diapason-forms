@@ -1,0 +1,23 @@
+{% extends 'shared/emails/notify_investigators.html' %} {% load tz %}
+
+{% block form_list %}
+{% for fne in forms %}
+<div class="form">
+  <p>
+    <strong>Evènement {{ fne.event_type_list|default:"" }} le
+      {{ fne.event_date|date:"d/m/Y" }} à {{ fne.event_date|date:"g:i" }} TU</strong>
+    -
+    <a href="{{ detail_url }}{{ fne.uuid }}">{{form_name}}
+      {% if safetycube_enabled %}{{ fne.safetycube.reference|default_if_none:"" }}{% else %}{{ fne.sub_data.inca_number|default_if_none:"" }}{% endif %} (Zone {{ fne.zones|default_if_none:"?"  }})</a>
+  </p>
+
+  <p class="long-text">{{ fne.description|truncatechars:250 }}</p>
+  {% if fne.sub_data.postits|length > 0 %}
+  <p>{{ fne.sub_data.postits|length }} post-its</p>
+  {% endif %} {% if fne.attachments|length > 0 %}
+  <p>{{ fne.attachments|length }} pièces jointes</p>
+  {% endif %}
+</div>
+<hr />
+{% endfor %}
+{% endblock %}

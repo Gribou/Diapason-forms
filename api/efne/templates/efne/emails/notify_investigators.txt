@@ -1,0 +1,20 @@
+{% extends 'shared/emails/notify_investigators.txt' %}
+{% load tz %}{% block body %}
+Bonjour,
+
+{% if forms.count > 1 %}{{forms.count}} nouvelles FNE ont été attribuées à votre sub.{% else %}1 nouvelle FNE a été attribuée à votre sub.{% endif %}
+
+{% for fne in forms %}
+Evènement {{ fne.event_type_list|default:"" }} le {{ fne.event_date|date:"d/m/Y" }} à {{ fne.event_date|date:"g:i" }} TU
+FNE {% if safetycube_enabled %}{{ fne.safetycube.reference|default_if_none:"" }}{% else %}{{ fne.sub_data.inca_number|default_if_none:"" }}{% endif %} (Zone {{ fne.zones|default_if_none:"?"  }})
+Lien : {{ detail_url }}{{ fne.uuid }}
+
+Description : {{ fne.description|truncatechars:250 }}
+{% if fne.sub_data.postits|length > 0 %}{{ fne.sub_data.postits|length }} post-its
+{% endif %}{% if fne.attachments|length > 0 %}{{ fne.attachments|length }} pièces jointes
+{% endif %}
+------------------------------------------------------------
+{% endfor %}
+
+Vous pouvez retrouver la liste des fiches à traiter par votre sub sur {{site_name}} : {{list_url}}
+{% endblock %}

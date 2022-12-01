@@ -1,0 +1,281 @@
+{% extends 'shared/export/pdf.html' %}
+
+
+{% block form %}
+<h3>Informations générales</h3>
+
+<table>
+	<tr>
+		<td class="cell-header">Date</td>
+		<td class="cell-header">Heure UTC</td>
+		<td class="cell-header">Secteur</td>
+		<td class="cell-header">Position</td>
+		<td class="cell-header">Regroupement</td>
+		<td class="cell-header">Lieu de l'évènement</td>
+	</tr>
+	<tr>
+		<td>{{ form.event_date|date }}</td>
+		<td>{{ form.event_date|time:"H:i"}}</td>
+		<td>{{ form.secteur }}</td>
+		<td>{{ form.position }}</td>
+		<td>{{ form.regroupement }}</td>
+		<td>{{ form.lieu }}</td>
+	</tr>
+	<tr>
+		{% if not anonymous %}
+		<td>
+			<p class="cell-header">Equipe</p>
+			{% for r in form.redactors.all %}
+			<p>{{ r.team.label }}</p>
+			{% endfor %}
+		</td>
+		<td colspan="4" style="text-align: start;">
+			<p class="cell-header">Nom du (ou des) rédacteur(s) :</p>
+			{% for r in form.redactors.all %}
+			<p><span style="margin-right: 20px;">{{ r.role }}</span><span>{{ r.fullname }}</span></p>
+			{% endfor %}
+		</td>
+		{% endif %}
+		<td>
+			<p class="cell-header">Instruction</p>
+			<p>{{ form.isp|yesno:"Oui,Non" }}</p>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6" style="text-align:start;">
+			<h3 style="display: inline;">Indicatifs Aéronefs concernés :</h3>
+			{% for a in form.aircrafts.all %}
+			<span style="margin-right: 4px;">{{ a.callsign }}</span>
+			{% endfor %}
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6" style="text-align:start;">
+			<h3 style="display: inline;">Type d'évènement :</h3>
+			{% for t in form.event_types.all %}
+			<span style="margin-right: 4px;">{{ t.name }}</span>
+			{% endfor %}
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<span class="cell-header">Notification RPO :</span>
+			{{ form.cds_report.notif_rpo|yesno:"Oui,Non" }}
+		</td>
+		<td colspan="2">
+			<span class="cell-header">Constat Préalable d'Infraction :</span>
+			{{ form.cds_report.cpi|yesno:"Oui,Non" }}
+		</td>
+		<td colspan="2">
+			<span class="cell-header">REX Chef de Salle :</span>
+			{{ form.cds_report.rex_cds|yesno:"Oui,Non" }}
+		</td>
+	</tr>
+</table>
+
+<table>
+	<tr>
+		<td colspan="5">
+			<h3 class="cell-header">A entreprendre selon le type d'évènement</h3>
+		</td>
+	</tr>
+	{% if form.tech_event.all %}
+	{% for t in form.tech_event.all %}
+	{% if t.actions.all %}
+	<tr>
+		<td colspan="2" rowspan="{{t.actions.all|length|add:1}}" style="text-align:start">
+			<span class="cell-header">{{ t }}</span>
+		</td>
+	</tr>
+	{% for a in t.actions.all %}
+	<tr>
+		<td colspan="2" style="text-align:start">
+			{{ a.name }}
+		</td>
+		<td>
+			{% if a in form.tech_actions_done.all %}
+			Fait
+			{% else %}
+			<strong>A faire</strong>
+			{% endif %}
+		</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	<tr>
+		<td colspan="2" style="text-align:start">
+			{{ t }}
+		</td>
+		<td colspan="3" style="text-align:start">Aucune action à entreprendre</td>
+	</tr>
+	{% endif %}
+	{% endfor %}
+	{% else %}
+	<tr>
+		<td colspan="5">Cet évènement ne nécessite pas d'action technique.</td>
+	</tr>
+	{% endif %}
+</table>
+
+<div class="pagebreak"></div>
+
+{% if form.tcas_report %}
+<h3>Compte-rendu d'évènement TCAS</h3>
+
+<table>
+	{% for a in form.tcas_report.aircrafts.all %}
+	<tr>
+		<td colspan="4" style="text-align:start">
+			<h4 class="cell-header">
+				{% if a.is_origin %}
+				Informations sur l'aéronef signalant l'évènement TCAS
+				{% else %}
+				Informations sur l'autre aéronef
+				{% endif %}
+			</h4>
+		</td>
+	</tr>
+	<tr>
+		<td style="text-align:start">
+			<span class="question">Indicatif : </span>{{ a.callsign }}
+		</td>
+		<td style="text-align:start">
+			<span class="question">Code SSR : </span>{{ a.ssr }}
+		</td>
+		<td style="text-align:start">
+			{% if a.is_origin %}
+			<span class="question">Type d'avis signalé : </span>
+			{{ a.advisory_type }}
+			{% else %}
+			<span class="question">Contact radio : </span>
+			{{ a.contact_radio|yesno:"Oui,Non"}}
+			{% endif %}
+		</td>
+		<td style="text-align:start">
+			{% if a.is_origin %}
+			{% else %}
+			<span class="question">VFR : </span>
+			{{ a.is_vfr|yesno:"Oui,Non"}}
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td style="text-align:start">
+			<span class="question">Phase de vol : </span>
+			{{ a.get_flight_phase_display }}
+		</td>
+		<td style="text-align:start">
+			<span class="question">Niveau réel : </span>FL
+			{{ a.real_fl|default:"0" }}
+		</td>
+		<td style="text-align:start">
+			<span class="question">Niveau assigné : </span>FL
+			{{ a.assigned_fl|default:"0" }}
+		</td>
+		<td style="text-align:start">
+			{% if a.is_origin %}
+			{% else %}
+			<span class="question">Militaire : </span>
+			{{ a.is_mil|yesno:"Oui,Non"}}
+			{% endif %}
+		</td>
+	</tr>
+	<tr></tr>
+	<tr></tr>
+	{% endfor %}
+
+	<tr>
+		<td colspan="4" style="text-align:start">
+			<h4 class="cell-header">Distances minimales</h4>
+			<p>
+				<span class="question" style="margin-right:36px">Selon le pilote :</span>
+				<span class="answer">
+					{{ form.tcas_report.pilote_min_distance|floatformat }} NM</span>
+				<span class="answer">
+					{{form.tcas_report.pilote_min_altitude|floatformat}} ft</span>
+			</p>
+			<p>
+				<span class="question">Selon le contrôleur :</span>
+				<span class="answer">
+					{{ form.tcas_report.ctl_min_distance|floatformat }} NM</span>
+				<span class="answer">
+					{{form.tcas_report.ctl_min_altitude|floatformat}} ft</span>
+			</p>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="4" style="text-align:start;">
+			<p><span class="question">Y a-t-il eu information de trafic ?</span>
+				{{ form.tcas_report.traffic_info|yesno:"Oui,Non" }}</p>
+			<p><span class="question">Sur demande du pilote ?</span>
+				{{ form.tcas_report.pilot_request|yesno:"Oui,Non" }}</p>
+			<p><span class="question">Si OUI, la demande a-t-elle été faite AVANT ou APRES la manoeuvre ?</span>
+				{{ form.tcas_report.before_manoeuvre|yesno:"Avant,Après" }}</p>
+			<p><span class="question">A votre avis, l'action du pilote était-elle justifiée ?</span>
+				{{ form.tcas_report.pilot_action_required|yesno:"Oui,Non" }}</p>
+			<p><span class="question">Cet évènement a-t-il perturbé votre gestion du trafic ?</span>
+				{{ form.tcas_report.disrupted_traffic|yesno:"Oui,Non" }}</p>
+			<p><span class="question">L'un des pilotes a-t-il signalé vouloir rédiger un ASR ?</span>
+				{{ form.tcas_report.asr|yesno:"Oui,Non" }}</p>
+			<p><span class="question">Le filet de sauvegarde s'est-il déclenché ?</span>
+				{{ form.tcas_report.safety_net|yesno:"Oui,Non" }}</p>
+		</td>
+	</tr>
+</table>
+<div class="pagebreak"></div>
+
+{% endif %}
+
+<h3>Description de l'évènement</h3>
+
+<table>
+	<tr>
+		<td>
+			<p class="text-content">{{ form.description }}</p>
+		</td>
+</table>
+
+{% if form.cds_report.com_cds %}
+<h3>Commentaires Chef de Salle</h3>
+
+<table>
+	<tr>
+		<td>
+			<p class="text-content">{{ form.cds_report.com_cds }}</p>
+		</td>
+	</tr>
+</table>
+{% endif %}
+
+<h3>Pièces jointes</h3>
+
+{% if encoded_drawing %}
+<p></p>
+<h4>{{ encoded_drawing.title }}</h4>
+<img src="data:image/png;base64, {{ encoded_drawing.data }}" alt="{{ encoded_drawing.url }}" />
+{% endif %}
+{% for img in encoded_attachments %}
+<p></p>
+<h4>{{ img.title }}</h4>
+<img src="data:image/png;base64, {{ img.data }}" alt="{{ img.url }}" />
+{% endfor %}
+
+{% for img in encoded_strips %}
+<p></p>
+<h4>{{ img.title }}</h4>
+<img src="data:image/png;base64, {{ img.data }}" alt="{{ img.url }}" />
+{% endfor %}
+
+
+{% if encoded_attachments|length == 0 %}
+{% if encoded_drawing == None %}
+{% if encoded_strips|length == 0 %}
+<p></p>
+<p>Pas de pièces jointes</p>
+{% endif %}
+{% endif %}
+{% endif %}
+
+{% endblock %}

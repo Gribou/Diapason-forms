@@ -23,12 +23,8 @@ COPY ./scripts ../scripts
 RUN rm -f .env*.local && npm run build
 
 #------------------------------------------------------------------
-#FROM python:3.9-slim as back-builder
-FROM  registry.fedoraproject.org/f33/python3 as back-builder
-USER 0
-ADD app-src /tmp/src
-RUN /usr/bin/fix-permissions /tmp/src
-USER 1001
+FROM python:3.9-slim as back-builder
+
 
 # reduce image size by having only the required python dependencies in final image
 
@@ -42,12 +38,8 @@ COPY ./api/Pipfile ./api/Pipfile.lock ./
 RUN pipenv install
 
 #------------------------------------------------------------------
-#FROM python:3.9-slim as final
-FROM  registry.fedoraproject.org/f33/python3 as back-builder
-USER 0
-ADD app-src /tmp/src
-RUN /usr/bin/fix-permissions /tmp/src
-USER 1001
+FROM python:3.9-slim as final
+
 
 ARG HTTPS_PROXY=
 ARG HTTP_PROXY=

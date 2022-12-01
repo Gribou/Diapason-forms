@@ -24,11 +24,15 @@ RUN rm -f .env*.local && npm run build
 
 #------------------------------------------------------------------
 #FROM python:3.9-slim as back-builder
-FROM  registry.fedoraproject.org/f33/python3 as back-builder
+#FROM  registry.fedoraproject.org/f33/python3 as back-builder
+FROM alpine:latest as back-builder
+RUN apk add --no-cache py3-pip \
+    && pip3 install --upgrade pip
+
 # reduce image size by having only the required python dependencies in final image
 
-ENV PIPENV_VENV_IN_PROJECT=1
-ENV PATH="/app/api/.venv/bin:$PATH"
+#ENV PIPENV_VENV_IN_PROJECT=1
+#ENV PATH="/app/api/.venv/bin:$PATH"
 
 WORKDIR /app/api
 
@@ -38,7 +42,10 @@ RUN pipenv install
 
 #------------------------------------------------------------------
 #FROM python:3.9-slim as final
-FROM  registry.fedoraproject.org/f33/python3 as back-builder
+#FROM  registry.fedoraproject.org/f33/python3 as back-builder
+FROM alpine:latest as back-builder
+RUN apk add --no-cache py3-pip \
+    && pip3 install --upgrade pip
 ARG HTTPS_PROXY=
 ARG HTTP_PROXY=
 ARG FTP_PROXY=
